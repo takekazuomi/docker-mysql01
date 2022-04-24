@@ -89,6 +89,7 @@ const (
 	TableLock             = 1
 	AutoCommit            = 2
 	MultiValue            = 3
+	Tsv                   = 4
 )
 
 type PrePostSQL struct {
@@ -173,7 +174,7 @@ func (fs *Features) printTsv(sep string) error {
 
 func (fs *Features) Print(sqlOption SqlOption, args ...interface{}) (err error) {
 	switch sqlOption {
-	case MultiValue:
+	case Tsv:
 		sep := "\t"
 		if args != nil {
 			sep = args[0].(string)
