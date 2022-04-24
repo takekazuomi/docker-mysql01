@@ -1,0 +1,33 @@
+{
+  "type": "FeatureCollection",
+  "name": "P04-20",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:EPSG::6668"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "P04_001": 1,
+        "P04_002": "医療法人樹恵会石田病院",
+        "P04_003": "標津郡中標津町りんどう町5番地6",
+        "P04_004": "内　リハ",
+        "P04_005": null,
+        "P04_006": null,
+        "P04_007": 4,
+        "P04_008": 60,
+        "P04_009": 9,
+        "P04_010": 9
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          144.927071399999988,
+          43.54427951
+        ]
+      }
+    }
+  ]
