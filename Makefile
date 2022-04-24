@@ -33,17 +33,20 @@ data/P04-20.geojson:
 sql-migrate-up:
 	docker compose -f docker-compose.yml exec dev /bin/bash -c "sql-migrate up; sql-migrate status"
 
-dataImport/bin/geojson2sql:
-	docker compose -f docker-compose.yml exec dev /bin/bash -c "cd dataImport && make build"
+sql-migrate-new:
+	docker compose -f docker-compose.yml exec dev /bin/bash -c "sql-migrate new tempolaryname"
 
-import: data/P04-20.geojson dataImport/bin/geojson2sql sql-migrate-up
-	docker compose -f docker-compose.yml exec dev /bin/bash -c "cd dataImport && make import"
+import/bin/geojson2sql:
+	docker compose -f docker-compose.yml exec dev /bin/bash -c "cd import && make build"
 
-sql: data/P04-20.geojson dataImport/bin/geojson2sql
-	docker compose -f docker-compose.yml exec dev /bin/bash -c "cd dataImport && make sql"
+import: data/P04-20.geojson import/bin/geojson2sql sql-migrate-up
+	docker compose -f docker-compose.yml exec dev /bin/bash -c "cd import && make import"
+
+sql: data/P04-20.geojson import/bin/geojson2sql
+	docker compose -f docker-compose.yml exec dev /bin/bash -c "cd import && make sql"
 
 benchmark:
-	docker compose -f docker-compose.yml exec dev /bin/bash -c "cd dataImport && make benchmark"
+	docker compose -f docker-compose.yml exec dev /bin/bash -c "cd import && make clean build benchmark"
 
 
 

@@ -1,28 +1,11 @@
-package geojson2sql_test
+package geojson_test
 
 import (
-	. "gis/geojson2sql"
 	"reflect"
 	"testing"
-)
 
-func TestFeatures_PrintTsv(t *testing.T) {
-	type args struct {
-		sep string
-	}
-	tests := []struct {
-		name string
-		fs   Features
-		args args
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tt.fs.PrintTsv(tt.args.sep)
-		})
-	}
-}
+	. "github.com/takekazuomi/docker-mysql01/import/geojson"
+)
 
 var (
 	fcOne *FeatureCollection = &FeatureCollection{
