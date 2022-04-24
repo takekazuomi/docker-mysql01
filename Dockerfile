@@ -11,6 +11,7 @@ RUN groupadd -g ${GID} ${GROUPNAME} && \
 RUN apt-get update && apt-get install -y --no-install-recommends \
   mariadb-client \
   sudo \
+  gettext \
   && apt-get -y clean \
   && rm -rf /var/lib/apt/lists/* \
   && echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME}

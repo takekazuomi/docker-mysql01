@@ -143,7 +143,44 @@ Generating report in profile001.png
 
 かかる時間は変わらないけど、メモリが半分になった。
 
+## MySQLでload data
+
+追加で、５つ目の方法を試す。これが一番速いはず。基本的なアイデアは、geojsonから、tsvファイルを作成する。そして、`temporary table` に、`load data local`で`insert`後、目的のテーブルに、`insert into`でコピーする。概ね１分７秒程度で終わる。
+そのために、下記のようなSQLを用意して、`${DATA_FILENAME}` の部分をgeojsonから生成する。もしかしたら、MySQL 8なら直接geojsonが読めるかもしれないが、調べていない。
+
+```sql
+drop temporary table if exists temp_hospital;
+
+create temporary table temp_hospital (
+  id bigint auto_increment primary key,
+  name varchar(500),
+  latpoint float,
+  lngpoint float
+);
+
+load data local infile '${DATA_FILENAME}'
+into table temp_hospital (@1, @2, @3)
+set
+  name = @1,
+  latpoint = @2,
+  lngpoint = @3;
+
+insert into
+  hospital (name, location)
+select
+  name,
+  st_srid(point(lngpoint, latpoint), 4326)
+from
+  temp_hospital
+where
+  lngpoint is not null
+  and latpoint is not null
+  and name is not null;
+```
+
+※サーバーのストレージにコピーすることができれば、`load data`(local無し)が使えてそれが一番速いはず。だが残念ながら、Azure MySQLではその手は使えないので、確認は後にする。
+
 ## TODO
 
-- [ ] LOAD DATA版
+- [ ] query
 - [ ] go/sql版
