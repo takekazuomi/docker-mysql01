@@ -11,8 +11,9 @@ import (
 )
 
 var (
-	Verbose bool      = false
-	Output  io.Writer = os.Stdout
+	Verbose     bool      = false
+	Output      io.Writer = os.Stdout
+	NewFeatures           = newFeaturesReadFile
 )
 
 type FeatureCollection struct {
@@ -185,7 +186,7 @@ func (fs *Features) Print(sqlOption SqlOption, args ...interface{}) (err error) 
 }
 
 // ReadFile version
-func NewFeatures(jsonFile string) (*FeatureCollection, error) {
+func newFeaturesReadFile(jsonFile string) (*FeatureCollection, error) {
 
 	bytes, err := ioutil.ReadFile(jsonFile)
 	if err != nil {
@@ -209,7 +210,8 @@ func NewFeatures(jsonFile string) (*FeatureCollection, error) {
 	return &fc, nil
 }
 
-func NewFeaturesReadAll(jsonFile string) (*FeatureCollection, error) {
+// ReadAll version
+func newFeaturesReadAll(jsonFile string) (*FeatureCollection, error) {
 
 	file, err := os.Open(jsonFile)
 	if err != nil {
