@@ -35,3 +35,31 @@ real    1m19.526s
 user    0m0.167s
 sys     0m0.167s
 ```
+
+```
+$ go test -benchmem -run='^$' -bench '^BenchmarkMain$' github.com/takekazuomi/docker-mysql01/import/cmd -v
+goos: linux
+goarch: amd64
+pkg: github.com/takekazuomi/docker-mysql01/import/cmd
+cpu: Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz
+BenchmarkMain
+BenchmarkMain/P04-20.geojson
+BenchmarkMain/P04-20.geojson-8          1000000000               0.0000749 ns/op               0 B/op          0 allocs/op
+BenchmarkMain/P04-20.geojson#01
+BenchmarkMain/P04-20.geojson#01-8       1000000000               0.0000829 ns/op               0 B/op          0 allocs/op
+BenchmarkMain/P04-20.geojson#02
+BenchmarkMain/P04-20.geojson#02-8              1        1175299800 ns/op        557521072 B/op   2550968 allocs/op
+BenchmarkMain/P04-20.geojson#03
+BenchmarkMain/P04-20.geojson#03-8              1        1152912700 ns/op        557521112 B/op   2550967 allocs/op
+BenchmarkMain/P04-20.geojson#04
+BenchmarkMain/P04-20.geojson#04-8              1        1160774400 ns/op        557518904 B/op   2550959 allocs/op
+BenchmarkMain/P04-20.geojson#05
+BenchmarkMain/P04-20.geojson#05-8              1        1142539700 ns/op        573023280 B/op   2732279 allocs/op
+PASS
+ok      github.com/takekazuomi/docker-mysql01/import/cmd        4.657s
+```
+
+## TODO
+
+- [ ] LOAD DATA版
+- [ ] go/sql版

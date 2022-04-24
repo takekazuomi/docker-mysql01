@@ -3,6 +3,7 @@ package geojson
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"strconv"
@@ -10,7 +11,8 @@ import (
 )
 
 var (
-	Verbose bool = false
+	Verbose bool      = false
+	Output  io.Writer = os.Stdout
 )
 
 type FeatureCollection struct {
@@ -70,7 +72,7 @@ type Features []Feature
 func (fs Features) Dump() {
 	// https://developers.google.com/maps/documentation/urls/get-started#search-action
 	for i, f := range fs {
-		fmt.Printf("%v, %v, %v, %v, https://www.google.com/maps/search/?api=1&query=%v,%v",
+		fmt.Fprintf(Output, "%v, %v, %v, %v, https://www.google.com/maps/search/?api=1&query=%v,%v",
 			i,
 			f.Properties.P04002,
 			f.Geometry.Coordinates[0], f.Geometry.Coordinates[1],
@@ -127,8 +129,8 @@ var PrePostSQLs = map[SqlOption]PrePostSQL{
 	},
 }
 
-func (fs Features) PrintSQL(sqlOption SqlOption) error {
-	fmt.Print(PrePostSQLs[sqlOption].Pre)
+func (fs Features) printSQL(sqlOption SqlOption) error {
+	fmt.Fprint(Output, PrePostSQLs[sqlOption].Pre)
 	insert := "insert into hospital (name, location) values"
 	eol := ";\n"
 	for i, f := range fs {
@@ -145,27 +147,41 @@ func (fs Features) PrintSQL(sqlOption SqlOption) error {
 			eol = ";\n"
 		}
 
-		fmt.Printf("%v('%v', st_geomfromtext('point(%v %v)', 4326))%v",
+		fmt.Fprintf(Output, "%v('%v', st_geomfromtext('point(%v %v)', 4326))%v",
 			insert,
 			strings.ReplaceAll(f.Properties.P04002, "'", "\\'"),
 			f.Geometry.Coordinates[1], f.Geometry.Coordinates[0],
 			eol)
 	}
-	fmt.Print(PrePostSQLs[sqlOption].Post)
+	fmt.Fprint(Output, PrePostSQLs[sqlOption].Post)
 
 	return nil
 }
 
-func (fs Features) PrintTsv(sep string) error {
+func (fs Features) printTsv(sep string) error {
 	for _, f := range fs {
 		s := []string{
 			strings.ReplaceAll(f.Properties.P04002, "'", "\\'"),
 			strconv.FormatFloat(f.Geometry.Coordinates[1], 'f', -1, 32),
 			strconv.FormatFloat(f.Geometry.Coordinates[0], 'f', -1, 32),
 		}
-		fmt.Println(strings.Join(s, sep))
+		fmt.Fprintln(Output, strings.Join(s, sep))
 	}
 	return nil
+}
+
+func (fs Features) Print(sqlOption SqlOption, args ...interface{}) (err error) {
+	switch sqlOption {
+	case MultiValue:
+		sep := "\t"
+		if args != nil {
+			sep = args[0].(string)
+		}
+		err = fs.printTsv(sep)
+	default:
+		err = fs.printSQL(sqlOption)
+	}
+	return err
 }
 
 func NewFeatures(jsonFile string) (*FeatureCollection, error) {
@@ -177,7 +193,7 @@ func NewFeatures(jsonFile string) (*FeatureCollection, error) {
 	defer file.Close()
 
 	if Verbose {
-		fmt.Printf("Successfully Opened %v\n", jsonFile)
+		fmt.Fprintf(Output, "Successfully Opened %v\n", jsonFile)
 	}
 
 	bytes, err := ioutil.ReadAll(file)

@@ -7,24 +7,6 @@ import (
 	. "github.com/takekazuomi/docker-mysql01/import/geojson"
 )
 
-func TestFeatures_PrintTsv(t *testing.T) {
-	type args struct {
-		sep string
-	}
-	tests := []struct {
-		name string
-		fs   Features
-		args args
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tt.fs.PrintTsv(tt.args.sep)
-		})
-	}
-}
-
 var (
 	fcOne *FeatureCollection = &FeatureCollection{
 		Type: "FeatureCollection",

@@ -1,12 +1,9 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"os"
 
-	g "github.com/takekazuomi/docker-mysql01/import/geojson"
+	. "github.com/takekazuomi/docker-mysql01/import/geojson"
 
 	flag "github.com/spf13/pflag"
 )
@@ -30,26 +27,18 @@ func main() {
 		return
 	}
 
-	file, err := os.Open(jsonFile)
+	Verbose = verbose
 
+	fc, err := NewFeatures(jsonFile)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("g.NewFeatures: %v", err)
+		return
 	}
-	defer file.Close()
-	if verbose {
-		fmt.Printf("Successfully Opened %v\n", jsonFile)
-	}
-
-	bytes, _ := ioutil.ReadAll(file)
-
-	var fc g.FeatureCollection
-
-	json.Unmarshal(bytes, &fc)
 
 	if verbose {
 		fc.Features.Dump()
 	}
 
-	fc.Features.PrintSQL(g.SqlOption(sqlOption))
+	fc.Features.Print(SqlOption(sqlOption))
 
 }
