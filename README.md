@@ -1,6 +1,7 @@
+
 https://hub.docker.com/_/mysql
 
-
+```sh
 $ make benchmark
 docker compose -f docker-compose.yml exec dev /bin/bash -c "cd dataImport && make benchmark"
 rm ../data/P04-20-0.sql ../data/P04-20-1.sql ../data/P04-20-2.sql ../data/P04-20-3.sql
@@ -33,4 +34,4 @@ time cat ../data/P04-20-3.sql | mysql -h ${MYSQL_HOST} -u ${MYSQL_USER} --passwo
 real    1m19.526s
 user    0m0.167s
 sys     0m0.167s
-$
+```

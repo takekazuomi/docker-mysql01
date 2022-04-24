@@ -1,9 +1,10 @@
-package geojson2sql_test
+package geojson_test
 
 import (
-	. "gis/geojson2sql"
 	"reflect"
 	"testing"
+
+	. "github.com/takekazuomi/docker-mysql01/import/geojson"
 )
 
 func TestFeatures_PrintTsv(t *testing.T) {

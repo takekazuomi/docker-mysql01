@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	g "gis/geojson2sql"
+	g "github.com/takekazuomi/docker-mysql01/import/geojson"
 
 	flag "github.com/spf13/pflag"
 )
