@@ -69,9 +69,9 @@ type Feature struct {
 
 type Features []Feature
 
-func (fs Features) Dump() {
+func (fs *Features) Dump() {
 	// https://developers.google.com/maps/documentation/urls/get-started#search-action
-	for i, f := range fs {
+	for i, f := range *fs {
 		fmt.Fprintf(Output, "%v, %v, %v, %v, https://www.google.com/maps/search/?api=1&query=%v,%v",
 			i,
 			f.Properties.P04002,
@@ -129,11 +129,11 @@ var PrePostSQLs = map[SqlOption]PrePostSQL{
 	},
 }
 
-func (fs Features) printSQL(sqlOption SqlOption) error {
+func (fs *Features) printSQL(sqlOption SqlOption) error {
 	fmt.Fprint(Output, PrePostSQLs[sqlOption].Pre)
 	insert := "insert into hospital (name, location) values"
 	eol := ";\n"
-	for i, f := range fs {
+	for i, f := range *fs {
 		switch i {
 		case 0:
 			if sqlOption == MultiValue {
@@ -143,7 +143,7 @@ func (fs Features) printSQL(sqlOption SqlOption) error {
 			if sqlOption == MultiValue {
 				insert = ""
 			}
-		case len(fs) - 1:
+		case len(*fs) - 1:
 			eol = ";\n"
 		}
 
@@ -158,8 +158,8 @@ func (fs Features) printSQL(sqlOption SqlOption) error {
 	return nil
 }
 
-func (fs Features) printTsv(sep string) error {
-	for _, f := range fs {
+func (fs *Features) printTsv(sep string) error {
+	for _, f := range *fs {
 		s := []string{
 			strings.ReplaceAll(f.Properties.P04002, "'", "\\'"),
 			strconv.FormatFloat(f.Geometry.Coordinates[1], 'f', -1, 32),
@@ -170,7 +170,7 @@ func (fs Features) printTsv(sep string) error {
 	return nil
 }
 
-func (fs Features) Print(sqlOption SqlOption, args ...interface{}) (err error) {
+func (fs *Features) Print(sqlOption SqlOption, args ...interface{}) (err error) {
 	switch sqlOption {
 	case MultiValue:
 		sep := "\t"
@@ -184,7 +184,32 @@ func (fs Features) Print(sqlOption SqlOption, args ...interface{}) (err error) {
 	return err
 }
 
+// ReadFile version
 func NewFeatures(jsonFile string) (*FeatureCollection, error) {
+
+	bytes, err := ioutil.ReadFile(jsonFile)
+	if err != nil {
+		return nil, fmt.Errorf("ioutil.ReadFile: %w", err)
+	}
+
+	if Verbose {
+		fmt.Fprintf(Output, "Successfully Opened %v\n", jsonFile)
+	}
+
+	var fc FeatureCollection
+
+	if err := json.Unmarshal(bytes, &fc); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal: %w", err)
+	}
+
+	if Verbose {
+		fc.Features.Dump()
+	}
+
+	return &fc, nil
+}
+
+func NewFeaturesReadAll(jsonFile string) (*FeatureCollection, error) {
 
 	file, err := os.Open(jsonFile)
 	if err != nil {
