@@ -48,5 +48,9 @@ sql: data/P04-20.geojson import/bin/geojson2sql
 benchmark:
 	docker compose -f docker-compose.yml exec dev /bin/bash -c "cd import && make clean build benchmark"
 
+.PHONY: query
+query:
+	docker compose -f docker-compose.yml exec dev /bin/bash -c "cd query && go run cmd/main.go"
+
 
 
