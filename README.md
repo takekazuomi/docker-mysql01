@@ -343,6 +343,10 @@ explain
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | 1 | SIMPLE | hospital | NULL | ALL | NULL | NULL | NULL | NULL | 167790 | 100 | Using where; Using filesort |
 
+## json stream 版
+
+全然はやくならない、メモリーも使いすぎ。これはだめそう。
+
 ## TODO
 
 - DBへの繋ぎ方
