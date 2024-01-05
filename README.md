@@ -1,4 +1,4 @@
-# MySQL+Docker+go
+# MySQL+Docker+go のローカル開発プロジェクト
 
 やってることは、下記のような感じ
 
@@ -114,13 +114,17 @@ mysql> select count(*) from geo.hospital;
 1 row in set (0.01 sec)
 ```
 
-ホストのポート3306に繋ぐと、dbコンテナに繋がります。スクショは、[Azure Data Studio](https://learn.microsoft.com/en-us/azure-data-studio/quickstart-mysql)で繋いだものです。
+ホストのポート3306に繋ぐと、dbコンテナに繋がります。スクショは、[Azure Data Studio](https://learn.microsoft.com/en-us/azure-data-studio/quickstart-mysql)で繋いだもの。
 
-![azure data studio](./docs/images/ads01.pngazure-data-studio.png)
+![azure data studio](./docs/images/ads01.png)
+
+> [!MEMO]
+>
+> Azure Data Studio は、結構便利でお勧めです。
+> インストールは、[Download and install Azure Data Studio](https://learn.microsoft.com/en-us/azure-data-studio/download-azure-data-studio?view=sql-server-ver16&tabs=win-install%2Cwin-user-install%2Credhat-install%2Cwindows-uninstall%2Credhat-uninstall) あたりから
 
 ## 追加のドキュメント
 
 - [データ投入の詳細と入れ方の比較](./docs/import.md)
 - [Geoクエリーを使った近傍検索](./docs/query.md)
 - [go profile toolsの利用](./docs/profile.md.md)
-- 
