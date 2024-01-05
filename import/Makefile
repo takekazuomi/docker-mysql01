@@ -33,7 +33,4 @@ import: import4
 benchmark: $(BENCHMARK_OPTS) import4
 
 clean:
-	-rm $(GEOJSON_BIN)
-	-rm $(SQL_OPTS)
-	-rm $(DATA_OPTS)
-	-rm $(BENCHMARK_OPTS)
+	-rm -f $(GEOJSON_BIN) $(SQL_OPTS) $(DATA_OPTS) $(BENCHMARK_OPTS)

@@ -27,6 +27,11 @@ services:
       - MYSQL_USER=geouser
     networks:
       - db-network
+    healthcheck:
+      test: ["CMD", "mysql", "-uroot", "-pmysql", "-e", "SELECT NOW()"]
+      interval: 5s
+      timeout: 5s
+      retries: 5      
 
 networks:
   db-network:
